@@ -1,6 +1,8 @@
 package logic
 
-import huh "github.com/charmbracelet/huh"
+import (
+	huh "github.com/charmbracelet/huh"
+)
 
 // entry select box
 func ShowSelect() (string, error) {
@@ -27,4 +29,26 @@ func ShowSelect() (string, error) {
 	}
 
 	return appOption, nil
+}
+
+// confirm prompt
+func PromptBool() bool {
+	var confirmed bool
+
+	confirmPrompt := huh.NewForm(
+		huh.NewGroup(
+			huh.NewConfirm().
+				Title("Confirm?").
+				Affirmative("Yes").
+				Negative("No").
+				Value(&confirmed),
+		),
+	)
+
+	err := confirmPrompt.Run()
+	if err != nil {
+		return false
+	}
+
+	return confirmed
 }

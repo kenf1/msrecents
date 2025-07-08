@@ -34,13 +34,17 @@ func main() {
 	wrapperfn := func(input string) {
 		res, err := logic.GetFullPath([]string{appDict[input]})
 		if err != nil {
-			fmt.Println("error occurred", err)
+			fmt.Println(err)
 		}
 
 		if status == "production" {
-			logic.PlistRemove(res)
-			if err != nil {
-				fmt.Println("error occurred", err)
+			if logic.PromptBool() {
+				logic.PlistRemove(res)
+				if err != nil {
+					fmt.Println(err)
+				}
+			} else {
+				fmt.Println("cancelled")
 			}
 		} else {
 			fmt.Println(res)

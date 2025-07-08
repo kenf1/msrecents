@@ -41,6 +41,8 @@ func PlistRemove(plistPaths []string) error {
 		if err != nil {
 			return fmt.Errorf("failed to remove %s: %w", path, err)
 		}
+
+		fmt.Println(path, "removed")
 	}
 	return nil
 }

@@ -9,7 +9,8 @@
 			"extensions": [
 				"golang.go",
 				"formulahendry.code-runner",
-				"gxl.git-graph-3"
+				"gxl.git-graph-3",
+				"redhat.vscode-yaml"
 			],
 			"settings": {
 				"code-runner.enableAppInsights": false

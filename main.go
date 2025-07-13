@@ -9,78 +9,41 @@ import (
 )
 
 func main() {
-	//allow debug
+	//not req
 	var status string
 
-	if err := godotenv.Load(".env"); err != nil {
+	err := godotenv.Load(".env")
+	if err != nil {
 		status = "production"
 	} else {
 		status = os.Getenv("STATUS")
 	}
 
+	//available options
 	appDict := map[string]string{
 		"word":       "Word",
 		"excel":      "Excel",
 		"powerpoint": "Powerpoint",
 	}
 
+	//prompt user select option
 	selectedOption, err := logic.ShowSelect()
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 
-	//reduce repeat chunks
-	wrapperfn := func(input string) {
-		res, err := logic.GetFullPath([]string{appDict[input]})
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		if status == "production" {
-			if logic.PromptBool() {
-				logic.PlistRemove(res)
-				if err != nil {
-					fmt.Println(err)
-				}
-			} else {
-				fmt.Println("cancelled")
-			}
-		} else {
-			fmt.Println(res)
-		}
-	}
-
 	switch selectedOption {
 	case "word":
-		wrapperfn("word")
+		logic.ProcessApp(status, appDict["word"])
 	case "excel":
-		wrapperfn("excel")
+		logic.ProcessApp(status, appDict["excel"])
 	case "powerpoint":
-		wrapperfn("powerpoint")
+		logic.ProcessApp(status, appDict["powerpoint"])
 	case "all":
-		res, err := logic.GetFullPath(
-			[]string{
-				appDict["word"],
-				appDict["excel"],
-				appDict["powerpoint"],
-			},
-		)
-		if err != nil {
-			fmt.Println("error occurred", err)
-		}
-
-		if status == "production" {
-			logic.PlistRemove(res)
-			if err != nil {
-				fmt.Println("error occurred", err)
-			}
-		} else {
-			fmt.Println(res)
-		}
+		logic.ProcessAllApps(status, appDict)
 	case "exit":
 		fmt.Println("Goodbye...")
-		return
 	default:
 		fmt.Println(fmt.Errorf("invalid input: %s", selectedOption))
 		return
